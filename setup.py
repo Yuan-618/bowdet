@@ -10,7 +10,7 @@ setup(
     description="Bow change detection for bowed string instruments",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/haotian-yuan/bowdet",
+    url="https://github.com/Yuan-618/bowdet",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",
