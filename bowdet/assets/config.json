@@ -1,0 +1,13 @@
+{
+  "sr": 22050,
+  "n_mels": 64,
+  "n_fft": 2048,
+  "hop_length": 512,
+  "win_frames": 64,
+  "min_peak_distance_sec": 0.12,
+  "peak_percentile": 75,
+  "pos_tol_sec": 0.15,
+  "neg_tol_sec": 0.3,
+  "classify_threshold": 0.4,
+  "version": "0.2.0"
+}

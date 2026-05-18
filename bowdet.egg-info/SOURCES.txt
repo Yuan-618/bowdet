@@ -1,0 +1,13 @@
+README.md
+setup.py
+bowdet/__init__.py
+bowdet/detect.py
+bowdet.egg-info/PKG-INFO
+bowdet.egg-info/SOURCES.txt
+bowdet.egg-info/dependency_links.txt
+bowdet.egg-info/requires.txt
+bowdet.egg-info/top_level.txt
+bowdet/assets/config.json
+bowdet/assets/feat_mean.npy
+bowdet/assets/feat_std.npy
+bowdet/assets/model.keras
