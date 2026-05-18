@@ -50,12 +50,15 @@ Evaluated under leave-one-performer-out (LOPO) on 6 viola performers (9 recordin
 
 ## Citation
 
-If you use bowdet in your research, please cite:
+If you use bowdet in your research, please cite this repository:
 
-```
-Yuan, H. and Su, Y. (2026). Audio-Based Bow-Change Detection in Viola Performance:
-A Two-Stage Mel-Spectrogram Boundary Approach.
-Late-Breaking/Demo Session, ISMIR 2026.
+```bibtex
+@software{yuan2026bowdet,
+  author = {Haotian Yuan},
+  title  = {bowdet: Audio-based bow-change detection for string instruments},
+  year   = {2026},
+  url    = {https://github.com/Yuan-618/bowdet}
+}
 ```
 
 ## License
