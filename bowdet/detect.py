@@ -230,3 +230,122 @@ def detect(audio_path, threshold=None, min_dist_sec=None):
             selected[-1] = i
 
     return pred_times[selected]
+def detect_note_boundaries(
+    audio_path,
+    min_dist_sec=0.12,
+    peak_percentile=75
+):
+    """
+    Unsupervised note-boundary detection using the
+    V3 multi-scale mel boundary method.
+    """
+
+    import librosa
+
+    sr = 22050
+    hop_length = 512
+    n_fft = 2048
+    n_mels = 64
+    fmin = 100
+    fmax = 8000
+
+    y, sr = librosa.load(str(audio_path), sr=sr, mono=True)
+
+    mel = librosa.feature.melspectrogram(
+        y=y,
+        sr=sr,
+        hop_length=hop_length,
+        n_fft=n_fft,
+        n_mels=n_mels,
+        fmin=fmin,
+        fmax=fmax,
+    )
+
+    mel_db = librosa.power_to_db(mel, ref=np.max).T.astype(np.float32)
+
+    # normalize
+    mel_db = (
+        (mel_db - mel_db.mean()) /
+        (mel_db.std() + 1e-8)
+    )
+
+    frame_times = (
+        np.arange(mel_db.shape[0]) *
+        (hop_length / sr)
+    )
+
+    def _norm(x):
+        mn, mx = x.min(), x.max()
+        if mx > mn:
+            return (x - mn) / (mx - mn)
+        return np.zeros_like(x)
+
+    windows = [3, 5, 8]
+
+    n_frames = mel_db.shape[0]
+
+    strength = np.zeros(n_frames)
+
+    for hw in windows:
+
+        tmp = np.zeros(n_frames)
+
+        for t in range(hw, n_frames - hw):
+
+            left = mel_db[t-hw:t].mean(axis=0)
+            right = mel_db[t:t+hw].mean(axis=0)
+
+            tmp[t] = np.linalg.norm(right - left)
+
+        strength += _norm(tmp)
+
+    strength /= len(windows)
+
+    frame_sec = hop_length / sr
+
+    min_dist_frames = max(
+        1,
+        int(min_dist_sec / frame_sec)
+    )
+
+    valid = strength[strength > 0]
+
+    if len(valid) == 0:
+        return np.array([])
+
+    threshold = np.percentile(
+        valid,
+        peak_percentile
+    )
+
+    peaks = []
+
+    for i in range(1, len(strength) - 1):
+
+        if strength[i] < threshold:
+            continue
+
+        if (
+            strength[i] >= strength[i - 1]
+            and strength[i] >= strength[i + 1]
+        ):
+
+            if not peaks:
+                peaks.append(i)
+
+            else:
+
+                last = peaks[-1]
+
+                if i - last >= min_dist_frames:
+                    peaks.append(i)
+
+                elif strength[i] > strength[last]:
+                    peaks[-1] = i
+
+    return frame_times[np.array(peaks, dtype=int)]
+
+
+# short alias
+detect_nb = detect_note_boundaries
+

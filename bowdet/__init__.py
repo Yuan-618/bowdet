@@ -1,4 +1,5 @@
-from .detect import detect
-
-__version__ = "0.2.0"
-__all__ = ["detect"]
+from .detect import (
+    detect,
+    detect_note_boundaries,
+    detect_nb
+)
