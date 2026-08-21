@@ -186,6 +186,9 @@ def detect(audio_path, threshold=None, min_dist_sec=None):
     """
     import librosa
 
+    if not Path(audio_path).is_file():
+        raise FileNotFoundError(f"Audio file not found: {audio_path}")
+        
     _load()
     cfg = _CONFIG.copy()
     cfg["sr"] = cfg.get("sr", 22050)
@@ -242,6 +245,9 @@ def detect_note_boundaries(
 
     import librosa
 
+    if not Path(audio_path).is_file():
+        raise FileNotFoundError(f"Audio file not found: {audio_path}")
+        
     sr = 22050
     hop_length = 512
     n_fft = 2048
